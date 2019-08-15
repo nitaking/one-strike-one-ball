@@ -1,6 +1,14 @@
 import React from "react";
-import {StyleSheet, Text, View, TextInput, TouchableHighlight} from "react-native";
+import {
+    StyleSheet,
+    Text,
+    View,
+    TextInput,
+    TouchableOpacity,
+    Keyboard,
+} from "react-native";
 import { useStrikeNumber } from '../../hooks/number';
+
 
 export default function Main() {
     const {
@@ -11,9 +19,23 @@ export default function Main() {
         isOut,
         setNumbers,
         checkStrike,
+        isError,
     } = useStrikeNumber('294');
 
     // todo: ターン判定
+    // todo: 履歴表示
+    // todo: メモ（ナンバーのタッチで斜線）
+
+    const input1 = React.useRef(null);
+    const input2 = React.useRef(null);
+    const input3 = React.useRef(null);
+
+    const defaultProps = {
+        style: styles.number,
+        defaultValue: null,
+        placeholder: "0",
+        maxLength: 1,
+    };
 
     return (
         <View style={styles.container}>
@@ -25,32 +47,38 @@ export default function Main() {
             {isOut && <Text style={{ fontSize: 30 }}>OUT !!</Text>}
 
             <TextInput
-                style={styles.number}
-                keyboardType="number-pad"
-                defaultValue="0"
-                maxLength={1}
-                onChangeText={(text) => setNumbers({ value1: text })}
+                ref={input1}
+                {...defaultProps}
+                keyboardType="numeric"
+                onChangeText={(text) => {
+                    setNumbers({ value1: text });
+                    Keyboard.dismiss();
+                    input2.current.focus();
+                }}
             />
             <TextInput
-                style={styles.number}
-                keyboardType="number-pad"
-                defaultValue="0"
-                maxLength={1}
-                onChangeText={(text) => setNumbers({ value2: text })}
+                ref={input2}
+                {...defaultProps}
+                keyboardType="numeric"
+                onChangeText={(text) => {
+                    setNumbers({ value2: text });
+                    Keyboard.dismiss();
+                    input3.current.focus();
+                }}
             />
             <TextInput
-                style={styles.number}
-                keyboardType="number-pad"
-                defaultValue="0"
-                maxLength={1}
-                onChangeText={(text) => setNumbers({ value3: text })}
+                ref={input3}
+                {...defaultProps}
+                keyboardType="numeric"
+                onChangeText={(text) => {
+                    setNumbers({ value3: text });
+                    Keyboard.dismiss();
+                }}
             />
 
-          <TouchableHighlight
-            style={styles.button}
-              onPress={checkStrike}>
+          <TouchableOpacity style={[styles.button, isError && { opacity: 0.7 }]} onPress={checkStrike} disabled={isError}>
               <Text style={styles.submit}>送信</Text>
-          </TouchableHighlight>
+          </TouchableOpacity>
         </View>
     );
 }
