@@ -1,25 +1,36 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet, Text, TouchableOpacity, View,
+} from 'react-native';
 import {
   createStackNavigator,
   createAppContainer,
   NavigationScreenProp, StackActions, NavigationActions,
-} from "react-navigation";
+} from 'react-navigation';
+import { useDidMount } from 'react-hooks-lib';
+
 import Main from './src/page/Main';
+import UserInputA from './src/page/UserInputA';
 
 function App(props: { navigation: NavigationScreenProp<{}> }) {
-  function onPress() {
+  function goMain() {
     const resetAction = StackActions.reset({
       index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'Main' })],
+      actions: [NavigationActions.navigate({ routeName: 'UserInputA' })],
     });
     props.navigation.dispatch(resetAction);
-  };
+  }
+
+  // useDidMount(() => {
+  //   setTimeout( () => {
+  //     goMain();
+  //   },3000);
+  // });
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>ワンストワンボ</Text>
-      <TouchableOpacity style={styles.titleContainer} onPress={onPress}>
+      <TouchableOpacity style={styles.titleContainer} onPress={goMain}>
         <Text style={styles.start}>Start!</Text>
       </TouchableOpacity>
     </View>
@@ -44,22 +55,23 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: '#616161',
   },
   start: {
     fontSize: 52,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: '#434343',
-    fontFamily: 'sans-serif-medium'
-  }
+    fontFamily: 'sans-serif-medium',
+  },
 });
 
 const AppNavigator = createStackNavigator({
   Home: App,
-  Main: Main,
+  UserInputA,
+  Main,
 }, {
-  initialRouteName: "Home"
+  initialRouteName: 'Home',
 });
 
 export default createAppContainer(AppNavigator);
